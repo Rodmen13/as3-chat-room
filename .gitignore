@@ -1,5 +1,6 @@
 # Build and Release Folders
-.obj/
+.code/obj/
+.code/bin/
 # Other files and folders
 .settings/
 

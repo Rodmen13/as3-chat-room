@@ -113,7 +113,7 @@
 						dis.y = rect.y + (rect.height - dis.height) * .5;
 						imageContainer.addChild(dis);
 						//用于添加图片后输入文字时恢复默认样式
-						_content.addEventListener(TextEvent.TEXT_INPUT, onInput);
+						if(!_content.hasEventListener(TextEvent.TEXT_INPUT)) _content.addEventListener(TextEvent.TEXT_INPUT, onInput);
 					}
 				}
 				else {
