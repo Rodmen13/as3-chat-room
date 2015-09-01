@@ -112,8 +112,6 @@
 						dis.x = rect.x + (rect.width - dis.width) * .5;
 						dis.y = rect.y + (rect.height - dis.height) * .5;
 						imageContainer.addChild(dis);
-						//用于添加图片后输入文字时恢复默认样式
-						if(!_content.hasEventListener(TextEvent.TEXT_INPUT)) _content.addEventListener(TextEvent.TEXT_INPUT, onInput);
 					}
 				}
 				else {
@@ -132,6 +130,8 @@
 			_content.replaceText(i, i, String.fromCharCode(57344 + id));//在光标位置插入占位符
 			updateImages();
 			stage.focus = _content;//恢复文本框的焦点，让光标在文本框跳动
+			//用于添加图片后输入文字时恢复默认样式
+			if(!_content.hasEventListener(TextEvent.TEXT_INPUT)) _content.addEventListener(TextEvent.TEXT_INPUT, onInput);
 		}
 		
 		private function onInput(e:TextEvent):void 
@@ -170,8 +170,9 @@
 		
 		public function clear():void
 		{
-			_content.text = "";
 			while (imageContainer.numChildren > 0) imageContainer.removeChildAt(0);//清除图片
+			_content.text = "";
+			stage.focus = _content;
 		}
 		
 	}
