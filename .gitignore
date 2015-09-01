@@ -1,8 +1,6 @@
 # Build and Release Folders
-.code/obj/
-.code/bin/
-# Other files and folders
-.settings/
+code/obj/
+code/bin/
 
 # Project files, i.e. `.project`, `.actionScriptProperties` and `.flexProperties`
 # should NOT be excluded as they contain compiler settings and other important
