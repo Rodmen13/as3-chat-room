@@ -188,7 +188,7 @@
 		}
 		
 		/**
-		 * 对选中文本设置样式，如果是加粗,斜体和下划线则不在表情应用
+		 * 对选中文本设置样式
 		 * @param	format 目标样式
 		 */
 		public function setTextFormat(format:TextFormat):void
@@ -196,24 +196,18 @@
 			var b:int = _content.selectionBeginIndex;
 			var e:int = _content.selectionEndIndex;
 			if (b != e) {
-				if (format.bold || format.italic || format.underline) {//粗体,斜体和下划线不对表情应用
-					var n:int = b;
-					for (var i:int = b; i < e; i++) 
-					{
-						var c:Number = _content.text.charCodeAt(i);
-						if (CODE_BEGIN <= c && c <= CODE_END ) {
-							if (n < i) {
-								_content.setTextFormat(format, n, i);
-							}
-							n = i + 1;
-						}else if (i == e - 1) {
-							_content.setTextFormat(format, n, e);
-						}
+				var n:int = b;
+				for (var i:int = b; i < e; i++) {
+					var c:Number = _content.text.charCodeAt(i);
+					if (CODE_BEGIN <= c && c <= CODE_END ) {
+						if (n < i) _content.setTextFormat(format, n, i);
+						n = i + 1;
+						//除了对齐,其他样式都不应用到图片上
+						if (format.align != null) _content.setTextFormat(new TextFormat(null, null, null, null, null, null, null, null, format.align), i, i + 1);
+					}else if (i == e - 1) {
+						_content.setTextFormat(format, n, e);
 					}
-				}else {
-					_content.setTextFormat(format, b, e);
 				}
-				
 				updateImages();
 			}
 			stage.focus = _content;
@@ -260,11 +254,11 @@
 					break;
 					default:
 				}
-				
 				setTextFormat(format);
 			}
+			stage.focus = _content;
 		}
-		
+
 		public function clear():void
 		{
 			while (imageContainer.numChildren > 0) imageContainer.removeChildAt(0);//清除图片
