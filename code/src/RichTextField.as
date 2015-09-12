@@ -21,17 +21,17 @@
 	public class RichTextField extends Sprite 
 	{
 		/**左对齐*/
-		public static const FORMAT_LEFT:int = 0;
+		public static const FORMAT_LEFT:String = "left";
 		/**中对齐*/
-		public static const FORMAT_CENTER:int = 1;
+		public static const FORMAT_CENTER:String = "center";
 		/**右对齐*/
-		public static const FORMAT_RIGHT:int = 2;
+		public static const FORMAT_RIGHT:String = "right";
 		/**加粗*/
-		public static const FORMAT_BOLD:int = 3;
+		public static const FORMAT_BOLD:String = "bold";
 		/**斜体*/
-		public static const FORMAT_ITALIC:int = 4;
+		public static const FORMAT_ITALIC:String = "italic";
 		/**下划线*/
-		public static const FORMAT_UNDERLINE:int = 5;
+		public static const FORMAT_UNDERLINE:String = "underline";
 		
 		/**用于表示表情的字符的范围开始*/
 		private const CODE_BEGIN:Number = 57344;
@@ -217,40 +217,21 @@
 		 * 对选择文本设置左中右对齐,加粗,斜体和下划线等六种常用样式
 		 * @param	type 使用RichTextField.FORMAT_*枚举
 		 */
-		public function setNormalFormat(type:int):void
+		public function setNormalFormat(type:String):void
 		{
 			if (_content.selectionBeginIndex != _content.selectionEndIndex) {
 				var format:TextFormat = _content.getTextFormat(_content.selectionBeginIndex, _content.selectionEndIndex);
 				switch (type) {
 					case FORMAT_LEFT:
-						format.align = TextFormatAlign.LEFT;
-					break;
 					case FORMAT_CENTER:
-						format.align = TextFormatAlign.CENTER;
-					break;
 					case FORMAT_RIGHT:
-						format.align = TextFormatAlign.RIGHT;
+						format.align = type;
 					break;
 					case FORMAT_BOLD:
-						if (format.bold) {
-							format.bold = false;
-						}else {
-							format.bold = true;
-						}
-					break;
 					case FORMAT_ITALIC:
-						if (format.italic) {
-							format.italic = false;
-						}else {
-							format.italic = true;
-						}
-					break;
 					case FORMAT_UNDERLINE:
-						if (format.underline) {
-							format.underline = false;
-						}else {
-							format.underline = true;
-						}
+						if (format[type] == true) format[type] = false;
+						else format[type] = true;
 					break;
 					default:
 				}
@@ -265,7 +246,5 @@
 			_content.text = "";
 			stage.focus = _content;
 		}
-		
 	}
-
 }
