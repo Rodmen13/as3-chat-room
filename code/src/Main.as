@@ -7,8 +7,10 @@ package
 	import flash.events.MouseEvent;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
+	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	
-	[SWF(width=210, height=130, frameRate=24)]
+	[SWF(width=210, height=160, frameRate=24)]
 	/**
 	 * ...
 	 * @author WLDragon
@@ -22,7 +24,9 @@ package
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		private var rt:RichTextField;
+		private var rtf:RichTextField = new RichTextField(200, 90);
+		private var formatButtons:FormatButtons = new FormatButtons();
+		
 		private function init(e:Event = null):void 
 		{
 			removeEventListener(Event.ADDED_TO_STAGE, init);
@@ -30,13 +34,12 @@ package
 			stage.scaleMode = StageScaleMode.NO_SCALE;
 			var emojis:Array = [QQEmoji1, QQEmoji2, QQEmoji3, QQEmoji4, QQEmoji5];
 			
-			rt = new RichTextField(200, 90);
 			//rt.editable = false;
-			rt.x = rt.y = 5;
+			rtf.x = rtf.y = 5;
 			for (var i:int = 0; i < 5; i++) {
-				rt.registerImage(i, emojis[i]);
+				rtf.registerImage(i, emojis[i]);
 			}
-			addChild(rt);
+			addChild(rtf);
 			
 			var clearButton:TextField = new TextField();
 			clearButton.text = "clear";
@@ -58,16 +61,47 @@ package
 				mc.y = 100;
 				addChild(mc);
 			}
+			
+			formatButtons.addEventListener(MouseEvent.CLICK, onFormatClick);
+			formatButtons.x = 20;
+			formatButtons.y = 132;
+			addChild(formatButtons);
+		}
+		
+		private function onFormatClick(e:MouseEvent):void 
+		{
+			switch (e.target) 
+			{
+				case formatButtons.left:
+					rtf.setNormalFormat(RichTextField.FORMAT_LEFT);
+				break;
+				case formatButtons.center:
+					rtf.setNormalFormat(RichTextField.FORMAT_CENTER);
+				break;
+				case formatButtons.right:
+					rtf.setNormalFormat(RichTextField.FORMAT_RIGHT);
+				break;
+				case formatButtons.bold:
+					rtf.setNormalFormat(RichTextField.FORMAT_BOLD);
+				break;
+				case formatButtons.italic:
+					rtf.setNormalFormat(RichTextField.FORMAT_ITALIC);
+				break;
+				case formatButtons.underline:
+					rtf.setNormalFormat(RichTextField.FORMAT_UNDERLINE);
+				break;
+				default:
+			}
 		}
 		
 		private function onClick(e:MouseEvent):void 
 		{
-			rt.clear();
+			rtf.clear();
 		}
 		
 		private function insertEmoji(e:MouseEvent):void
 		{
-			rt.insertImage(int(e.target.name));
+			rtf.insertImage(int(e.target.name));
 		}
 	}
 	

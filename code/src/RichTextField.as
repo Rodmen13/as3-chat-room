@@ -8,6 +8,7 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
+	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
 	
 	/**
@@ -19,6 +20,24 @@
 	 */
 	public class RichTextField extends Sprite 
 	{
+		/**左对齐*/
+		public static const FORMAT_LEFT:int = 0;
+		/**中对齐*/
+		public static const FORMAT_CENTER:int = 1;
+		/**右对齐*/
+		public static const FORMAT_RIGHT:int = 2;
+		/**加粗*/
+		public static const FORMAT_BOLD:int = 3;
+		/**斜体*/
+		public static const FORMAT_ITALIC:int = 4;
+		/**下划线*/
+		public static const FORMAT_UNDERLINE:int = 5;
+		
+		/**用于表示表情的字符的范围开始*/
+		private const CODE_BEGIN:Number = 57344;
+		/**用于表示表情的字符的范围结束*/
+		private const CODE_END:Number = 63743;
+		
 		/**文本*/
 		private var _content:TextField = new TextField();
 		/**默认样式*/
@@ -95,12 +114,12 @@
 		private function createImage(index:int):void
 		{
 			var d:Number = _content.text.charCodeAt(index);
-			if (57344 <= d && d <= 63743) {
-				var c:Class = imageClasses[d - 57344] as Class;
+			if (CODE_BEGIN <= d && d <= CODE_END) {
+				var c:Class = imageClasses[d - CODE_BEGIN] as Class;
 				if (c != null) {					
 					var dis:DisplayObject = new c() as DisplayObject;
 					//设置字符大小，使用simsun字体各浏览器兼容性好，Arial字体可能出现"□"字符的情况，而且字符宽度不一致
-					var tf:TextFormat = new TextFormat("simsun", dis.height + 2);
+					var tf:TextFormat = new TextFormat("simsun", dis.height + 2, null, false, false, false);
 					placeHolder.text = String.fromCharCode(d);
 					placeHolder.setTextFormat(tf);
 					var m:TextLineMetrics = placeHolder.getLineMetrics(0);
@@ -115,7 +134,7 @@
 					}
 				}
 				else {
-					trace("请先使用registerImages方法注册id为" + (d - 57344) + "的图片");
+					trace("请先使用registerImages方法注册id为" + (d - CODE_BEGIN) + "的图片");
 				}
 			}
 		}
@@ -127,7 +146,7 @@
 		public function insertImage(id:int):void
 		{
 			var i:int = _content.caretIndex;//图片插入的位置
-			_content.replaceText(i, i, String.fromCharCode(57344 + id));//在光标位置插入占位符
+			_content.replaceText(i, i, String.fromCharCode(CODE_BEGIN + id));//在光标位置插入占位符
 			updateImages();
 			stage.focus = _content;//恢复文本框的焦点，让光标在文本框跳动
 			//用于添加图片后输入文字时恢复默认样式
@@ -166,6 +185,84 @@
 		public function get content():TextField 
 		{
 			return _content;
+		}
+		
+		/**
+		 * 对选中文本设置样式，如果是加粗,斜体和下划线则不在表情应用
+		 * @param	format 目标样式
+		 */
+		public function setTextFormat(format:TextFormat):void
+		{
+			var b:int = _content.selectionBeginIndex;
+			var e:int = _content.selectionEndIndex;
+			if (b != e) {
+				if (format.bold || format.italic || format.underline) {//粗体,斜体和下划线不对表情应用
+					var n:int = b;
+					for (var i:int = b; i < e; i++) 
+					{
+						var c:Number = _content.text.charCodeAt(i);
+						if (CODE_BEGIN <= c && c <= CODE_END ) {
+							if (n < i) {
+								_content.setTextFormat(format, n, i);
+							}
+							n = i + 1;
+						}else if (i == e - 1) {
+							_content.setTextFormat(format, n, e);
+						}
+					}
+				}else {
+					_content.setTextFormat(format, b, e);
+				}
+				
+				updateImages();
+			}
+			stage.focus = _content;
+		}
+		
+		/**
+		 * 对选择文本设置左中右对齐,加粗,斜体和下划线等六种常用样式
+		 * @param	type 使用RichTextField.FORMAT_*枚举
+		 */
+		public function setNormalFormat(type:int):void
+		{
+			if (_content.selectionBeginIndex != _content.selectionEndIndex) {
+				var format:TextFormat = _content.getTextFormat(_content.selectionBeginIndex, _content.selectionEndIndex);
+				switch (type) {
+					case FORMAT_LEFT:
+						format.align = TextFormatAlign.LEFT;
+					break;
+					case FORMAT_CENTER:
+						format.align = TextFormatAlign.CENTER;
+					break;
+					case FORMAT_RIGHT:
+						format.align = TextFormatAlign.RIGHT;
+					break;
+					case FORMAT_BOLD:
+						if (format.bold) {
+							format.bold = false;
+						}else {
+							format.bold = true;
+						}
+					break;
+					case FORMAT_ITALIC:
+						if (format.italic) {
+							format.italic = false;
+						}else {
+							format.italic = true;
+						}
+					break;
+					case FORMAT_UNDERLINE:
+						if (format.underline) {
+							format.underline = false;
+						}else {
+							format.underline = true;
+						}
+					break;
+					default:
+				}
+				
+				setTextFormat(format);
+			}
 		}
 		
 		public function clear():void
