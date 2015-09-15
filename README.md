@@ -19,3 +19,7 @@ rtf.insertImage(100);
 4.content //获取textField的引用
 
 5.clear //清除图片和文字
+
+6.setTextFormat //在指定范围内设置文本样式，如果不指定则对选择的内容进行设置
+
+7.setNormalFormat //对选择的行应用常用的对齐、加粗、斜体和下划线样式

@@ -8,7 +8,6 @@
 	import flash.text.TextField;
 	import flash.text.TextFieldType;
 	import flash.text.TextFormat;
-	import flash.text.TextFormatAlign;
 	import flash.text.TextLineMetrics;
 	
 	/**
@@ -188,13 +187,15 @@
 		}
 		
 		/**
-		 * 对选中文本设置样式
+		 * 对选中文本设置样式，如果没有设定beginIndex和endIndex则使用选择的文本
 		 * @param	format 目标样式
+		 * @param	beginIndex 开始的位置
+		 * @param	endIndex 结束的位置
 		 */
-		public function setTextFormat(format:TextFormat):void
+		public function setTextFormat(format:TextFormat, beginIndex:int = -1, endIndex:int = -1):void
 		{
-			var b:int = _content.selectionBeginIndex;
-			var e:int = _content.selectionEndIndex;
+			var b:int = beginIndex == -1 ? _content.selectionBeginIndex : beginIndex;
+			var e:int = endIndex == -1 ? _content.selectionEndIndex : endIndex;
 			if (b != e) {
 				var n:int = b;
 				for (var i:int = b; i < e; i++) {
@@ -219,25 +220,51 @@
 		 */
 		public function setNormalFormat(type:String):void
 		{
+			switch (type) {
+				case FORMAT_LEFT:
+				case FORMAT_CENTER:
+				case FORMAT_RIGHT:
+					setAlignFormat(type);
+				break;
+				case FORMAT_BOLD:
+				case FORMAT_ITALIC:
+				case FORMAT_UNDERLINE:
+					setNoAlignFormat(type);
+				break;
+				default:
+			}
+		}
+		
+		private function setAlignFormat(type:String):void
+		{
+			if (_content.text.length > 0) {
+				var b:int = _content.selectionBeginIndex;
+				var e:int = _content.selectionEndIndex;
+				if (b == _content.length) b = b - 1;  //防止光标在文本末端时出现超出索引范围
+				if (e == _content.length) e = e - 1;
+				var bl:int = _content.getLineIndexOfChar(b);
+				var el:int = _content.getLineIndexOfChar(e);
+				//设置对齐格式的字符范围为从被选择的行的头一行的头一个字符到最后一行的最后一个字符
+				b = _content.getLineOffset(bl);
+				e = _content.getLineOffset(el) + _content.getLineLength(el);
+				var format:TextFormat = _content.getTextFormat(b, e);
+				format.align = type;
+				setTextFormat(format, b, e);
+			}else {
+				stage.focus = _content;
+			}
+		}
+		
+		private function setNoAlignFormat(type:String):void
+		{
 			if (_content.selectionBeginIndex != _content.selectionEndIndex) {
 				var format:TextFormat = _content.getTextFormat(_content.selectionBeginIndex, _content.selectionEndIndex);
-				switch (type) {
-					case FORMAT_LEFT:
-					case FORMAT_CENTER:
-					case FORMAT_RIGHT:
-						format.align = type;
-					break;
-					case FORMAT_BOLD:
-					case FORMAT_ITALIC:
-					case FORMAT_UNDERLINE:
-						if (format[type] == true) format[type] = false;
-						else format[type] = true;
-					break;
-					default:
-				}
+				if (format[type] == true) format[type] = false;
+				else format[type] = true;
 				setTextFormat(format);
+			}else {
+				stage.focus = _content;
 			}
-			stage.focus = _content;
 		}
 
 		public function clear():void
