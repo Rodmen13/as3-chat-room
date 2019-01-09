@@ -10,7 +10,7 @@ package
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
 	
-	[SWF(width=210, height=160, frameRate=24)]
+	[SWF(width=300, height=300, frameRate=24)]
 	/**
 	 * ...
 	 * @author WLDragon
@@ -24,7 +24,7 @@ package
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		private var rtf:RichTextField = new RichTextField(200, 90);
+		private var rtf:RichTextField = new RichTextField(200, 200);
 		private var formatButtons:FormatButtons = new FormatButtons();
 		
 		private function init(e:Event = null):void 
@@ -48,7 +48,7 @@ package
 			clearButton.borderColor = 0x0;
 			clearButton.addEventListener(MouseEvent.CLICK, onClick);
 			clearButton.x = 170;
-			clearButton.y = 102;
+			clearButton.y = 212;
 			clearButton.selectable = false;
 			addChild(clearButton);
 			
@@ -58,13 +58,13 @@ package
 				mc.name = i.toString();
 				mc.buttonMode = true;
 				mc.x = 10 + i * 30;
-				mc.y = 100;
+				mc.y = 212;
 				addChild(mc);
 			}
 			
 			formatButtons.addEventListener(MouseEvent.CLICK, onFormatClick);
 			formatButtons.x = 20;
-			formatButtons.y = 132;
+			formatButtons.y = 242;
 			addChild(formatButtons);
 		}
 		
