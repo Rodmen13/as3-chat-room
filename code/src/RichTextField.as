@@ -127,6 +127,7 @@
 					_content.text = _content.text.replace(/\/:[0-9]+/, repString);
 				}
 				updateImages();
+				
 			}
 			
 		}
@@ -155,8 +156,10 @@
 					}
 				}
 				else {
-					trace("请先使用registerImages方法注册id为" + (d - CODE_BEGIN) + "的图片");
+					trace("請先使用registerImages方法註冊id為" + (d - CODE_BEGIN) + "的圖片");
 				}
+			}else{
+				_content.setTextFormat(defaultFormat, index, index + 1);
 			}
 		}
 		
@@ -167,7 +170,7 @@
 		public function insertImage(id:int):void
 		{
 			var i:int = _content.caretIndex;//圖片插入的位置
-			_content.replaceText(i, i, String.fromCharCode(CODE_BEGIN + id));//在游標位置插入占位符
+			_content.replaceText(i, i, String.fromCharCode(CODE_BEGIN + id));//在游標位置插入佔位符
 			updateImages();
 			stage.focus = _content;//恢复文字框的焦點，讓游標在文字框跳動
 			//用於添加圖片後输入文字時恢復默認字樣
