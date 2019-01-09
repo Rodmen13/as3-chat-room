@@ -151,7 +151,6 @@
 						//设置图片位置并添加到显示列表
 						dis.x = rect.x + (rect.width - dis.width) * .5;
 						dis.y = rect.y + (rect.height - dis.height) * .5;
-						dis.visible=false;
 						imageContainer.addChild(dis);
 					}
 				}
