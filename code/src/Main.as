@@ -1,14 +1,18 @@
 package 
 {
+	import com.worlize.gif.events.GIFPlayerEvent;
 	import flash.display.MovieClip;
 	import flash.display.Sprite;
 	import flash.display.StageScaleMode;
 	import flash.events.Event;
 	import flash.events.MouseEvent;
+	import flash.net.URLRequest;
 	import flash.text.TextField;
 	import flash.text.TextFieldAutoSize;
 	import flash.text.TextFormat;
 	import flash.text.TextFormatAlign;
+	import com.worlize.gif.GIFPlayer;
+	
 	
 	[SWF(width=300, height=300, frameRate=24)]
 	/**
@@ -18,14 +22,24 @@ package
 	public class Main extends Sprite 
 	{
 		
+		private var gifImage:GIFPlayer;
+		
+		
+		private var gifBox:Sprite;
+		
 		public function Main():void 
 		{
 			if (stage) init();
 			else addEventListener(Event.ADDED_TO_STAGE, init);
 		}
 		
-		private var rtf:RichTextField = new RichTextField(200, 200);
+		private var rtf:RichTextField = new RichTextField(280, 200);
 		private var formatButtons:FormatButtons = new FormatButtons();
+		private var url:Array = ["http://wx2.sinaimg.cn/large/0066wpcPly1fsjz95ywl9g3087087763.gif",
+								 "http://wx3.sinaimg.cn/large/006oOWahly1fu0xgy34v0g305y05yab8.gif",
+								 "http://wx3.sinaimg.cn/large/006BkP2Hly1fds70ehbv7g307606gacd.gif",
+								 "http://wx4.sinaimg.cn/large/006BkP2Hly1fds70ep590g304x04xmyt.gif",
+								 "http://wx3.sinaimg.cn/large/006BkP2Hly1fds70h3ue3g304x04xjtz.gif"];
 		
 		private function init(e:Event = null):void 
 		{
@@ -53,7 +67,7 @@ package
 			addChild(clearButton);
 			
 			for (i = 0; i < 5; i++) {
-				var mc:MovieClip = new emojis[i]() as MovieClip;
+				var mc:* = new emojis[i] as MovieClip;
 				mc.addEventListener(MouseEvent.CLICK, insertEmoji);
 				mc.name = i.toString();
 				mc.buttonMode = true;
@@ -61,12 +75,17 @@ package
 				mc.y = 212;
 				addChild(mc);
 			}
+		
 			
 			formatButtons.addEventListener(MouseEvent.CLICK, onFormatClick);
 			formatButtons.x = 20;
 			formatButtons.y = 242;
 			addChild(formatButtons);
+			
 		}
+		
+		
+		
 		
 		private function onFormatClick(e:MouseEvent):void 
 		{

@@ -23,3 +23,5 @@ rtf.insertImage(100);
 6.setTextFormat //在指定範圍内設置文字格式，如果不指定範圍則對選擇的內容進行設置
 
 7.setNormalFormat //對選擇的行套用常用的對齊、加粗、斜體和加底線樣式
+
+## 感謝 [WLDragon](https://gitee.com/wl/RichTextField) 的分享

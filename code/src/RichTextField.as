@@ -11,41 +11,41 @@
 	import flash.text.TextLineMetrics;
 	
 	/**
-	 * 图文混排组件,支持复制、粘贴、剪切
-	 * 注：请使用flash11及以上版本编译
-	 * Unicode编码在57344到63743这段范围内的字符表现形式为空白字符
-	 * 这里使用这些字符做占位符并记录表情信息
+	 * 圖文混牌組件,支持複製、貼上、剪下
+	 * 注意：請使用flash11及以上版本編譯
+	 * Unicode編碼在57344到63743這段範圍內的字符表現為空白字元
+	 * 這裡使用這些字符做占位符並記錄表情信息
 	 * @author WLDragon 2015-08-30
 	 */
 	public class RichTextField extends Sprite 
 	{
-		/**左对齐*/
+		/**左對齊*/
 		public static const FORMAT_LEFT:String = "left";
-		/**中对齐*/
+		/**中隊齊*/
 		public static const FORMAT_CENTER:String = "center";
-		/**右对齐*/
+		/**右對齊*/
 		public static const FORMAT_RIGHT:String = "right";
 		/**加粗*/
 		public static const FORMAT_BOLD:String = "bold";
-		/**斜体*/
+		/**斜體*/
 		public static const FORMAT_ITALIC:String = "italic";
-		/**下划线*/
+		/**底線*/
 		public static const FORMAT_UNDERLINE:String = "underline";
 		
-		/**用于表示表情的字符的范围开始*/
+		/**用於表示表情的字符的範圍開始*/
 		private const CODE_BEGIN:Number = 57344;
-		/**用于表示表情的字符的范围结束*/
+		/**用於表示表情的字符的範圍結束*/
 		private const CODE_END:Number = 63743;
 		
-		/**文本*/
+		/**主文本*/
 		private var _content:TextField = new TextField();
-		/**默认样式*/
+		/**默認樣式*/
 		private var defaultFormat:TextFormat;
-		/**图片类定义集*/
+		/**圖片類定義集*/
 		private var imageClasses:Array = [];
-		/**图片容器*/
+		/**圖片容器*/
 		private var imageContainer:Sprite = new Sprite();
-		/**测量占位符用的文本*/
+		/**測量占位符用的文本*/
 		private var placeHolder:TextField = new TextField();
 		/**是否可编辑*/
 		private var _editable:Boolean = true;
@@ -85,7 +85,7 @@
 		}
 		
 		/**
-		 * 注册图片类型
+		 * 註冊圖片類型
 		 * @param	id
 		 * @param	imageClass
 		 */
@@ -97,6 +97,7 @@
 		private function onChange(e:Event):void 
 		{
 			updateImages();
+			//trace(this, "onChange::::","text:::::::::::::::", content.text);
 		}
 		
 		private function updateImages():void
@@ -108,12 +109,33 @@
 			for (var i:int = start; i < end; i++) {
 				createImage(i);
 			}
+			
+			var repString:String = "";
+			var arrPatern:Array = _content.text.match(/\/:[0-9]+/);
+			var charCode:int = 0;
+			if (arrPatern)
+			{
+				for (var j:int = 0; j < arrPatern.length; j++)
+				{
+					repString = arrPatern[j];
+					repString = repString.substring(2, repString.length);
+					//trace("repString::::::::::", repString);
+					charCode = CODE_BEGIN + int(repString);
+					trace("repString::::::::::",charCode );
+					repString = String.fromCharCode(charCode);
+					//trace("repString:::charcode:::", repString);
+					_content.text = _content.text.replace(/\/:[0-9]+/, repString);
+				}
+				updateImages();
+			}
+			
 		}
 		
 		private function createImage(index:int):void
 		{
 			var d:Number = _content.text.charCodeAt(index);
-			if (CODE_BEGIN <= d && d <= CODE_END) {
+			if (CODE_BEGIN <= d && d <= CODE_END) 
+			{
 				var c:Class = imageClasses[d - CODE_BEGIN] as Class;
 				if (c != null) {					
 					var dis:DisplayObject = new c() as DisplayObject;
@@ -129,6 +151,7 @@
 						//设置图片位置并添加到显示列表
 						dis.x = rect.x + (rect.width - dis.width) * .5;
 						dis.y = rect.y + (rect.height - dis.height) * .5;
+						dis.visible=false;
 						imageContainer.addChild(dis);
 					}
 				}
@@ -139,22 +162,23 @@
 		}
 		
 		/**
-		 * 插入图片（flash的一切可显示对象），需要先使用registerImages注册对象类型
+		 * 插入圖片（flash的一切可顯示對象），需要先使用registerImages註冊對象類型
 		 * @param	id
 		 */
 		public function insertImage(id:int):void
 		{
-			var i:int = _content.caretIndex;//图片插入的位置
-			_content.replaceText(i, i, String.fromCharCode(CODE_BEGIN + id));//在光标位置插入占位符
+			var i:int = _content.caretIndex;//圖片插入的位置
+			_content.replaceText(i, i, String.fromCharCode(CODE_BEGIN + id));//在游標位置插入占位符
 			updateImages();
-			stage.focus = _content;//恢复文本框的焦点，让光标在文本框跳动
-			//用于添加图片后输入文字时恢复默认样式
+			stage.focus = _content;//恢复文字框的焦點，讓游標在文字框跳動
+			//用於添加圖片後输入文字時恢復默認字樣
 			if(!_content.hasEventListener(TextEvent.TEXT_INPUT)) _content.addEventListener(TextEvent.TEXT_INPUT, onInput);
 		}
 		
 		private function onInput(e:TextEvent):void 
 		{
-			removeEventListener(TextEvent.TEXT_INPUT, onInput);
+			trace(this, "onInput:::::::::::::");
+			_content.removeEventListener(TextEvent.TEXT_INPUT, onInput);
 			_content.defaultTextFormat = defaultFormat;
 		}
 		
