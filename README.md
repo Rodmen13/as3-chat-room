@@ -1,5 +1,5 @@
-#图文混排组件(RichTextField) v1.0
-as3版的图文混排组件，支持flash的所有显示对象，支持复制粘贴剪切功能，要求使用flash11及以上版本发布
+#圖文混合組件(RichTextField) v1.0
+as3版的圖文混合組件，支持flash的所有顯示物件，支持複製貼上剪下功能，要求使用flash11及以上版本發布
 
 ##如何使用
 
@@ -10,16 +10,16 @@ rtf.registerImage(100, ImageClass);
 rtf.insertImage(100);
 
 ##API
-1.registerImage //注册图片类型
+1.registerImage //註冊圖片類型
 
-2.insertImage //在光标位置插入图片
+2.insertImage //在光標位置插入图片
 
-3.editable //设置是否可手动编辑
+3.editable //設置是否可手動編輯
 
-4.content //获取textField的引用
+4.content //取得textField的參考
 
-5.clear //清除图片和文字
+5.clear //清除圖片和文字
 
-6.setTextFormat //在指定范围内设置文本样式，如果不指定则对选择的内容进行设置
+6.setTextFormat //在指定範圍内設置文字格式，如果不指定範圍則對選擇的內容進行設置
 
-7.setNormalFormat //对选择的行应用常用的对齐、加粗、斜体和下划线样式
+7.setNormalFormat //對選擇的行套用常用的對齊、加粗、斜體和加底線樣式
