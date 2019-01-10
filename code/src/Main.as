@@ -16,7 +16,7 @@ package
 	
 	[SWF(width=300, height=300, frameRate=24)]
 	/**
-	 * ...
+	 * 含表情符號的聊天室
 	 * @author WLDragon
 	 */
 	public class Main extends Sprite 
@@ -24,8 +24,6 @@ package
 		
 		private var gifImage:GIFPlayer;
 		
-		
-		private var gifBox:Sprite;
 		
 		public function Main():void 
 		{
@@ -83,9 +81,7 @@ package
 			addChild(formatButtons);
 			
 		}
-		
-		
-		
+			
 		
 		private function onFormatClick(e:MouseEvent):void 
 		{

@@ -61,7 +61,8 @@ package com.worlize.gif
 		
 		private var urlLoader:URLLoader;
 		
-		public function GIFPlayer(autoPlay:Boolean = true) {
+		public function GIFPlayer(autoPlay:Boolean = true)
+		{
 			this.autoPlay = autoPlay;
 			
 			urlLoader = new URLLoader();
